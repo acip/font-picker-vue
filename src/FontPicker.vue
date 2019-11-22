@@ -4,7 +4,7 @@
 				:class="{expanded: state.expanded}"
 				@click="toggleExpanded"
 				@keyup="updateFilter">
-			<p class="dropdown-font-name">{{state.activeFont}}</p>
+			<p class="dropdown-font-name" :style="{'font-family' : state.activeFont}">{{state.activeFont}}</p>
 			<p class="dropdown-icon" :class="state.loadingStatus"></p>
 		</button>
 		<ul v-if="state.loadingStatus === 'finished' && fontManager.fonts"
@@ -13,6 +13,7 @@
 			<li v-for="font in fonts" :key="font.family">
 				<button type="button" class="font-abeezece"
 						:class="`font-${snakeCase(font.family)}${pickerSuffix} ${font.family === state.activeFont ? 'active-font' : ''}`"
+                        :style="{'font-family' : font.family}"
 						@click.prevent="itemClick(font)"
 						@keypress.prevent="itemClick(font)">{{font.family}}</button>
 			</li>
@@ -22,6 +23,7 @@
 
 <script>
     import { FontManager } from 'font-picker';
+    import FallbackFontManager from './FallbackFontManager';
 
     /**
      * Vue interface for the font picker
@@ -89,7 +91,7 @@
             );
 
             this.fontManager.init()
-                .then(() => {
+                .finally(() => {
                     // font list has finished loading
                     this.setState({
                         errorText: '',
@@ -97,11 +99,9 @@
                     });
                 })
                 .catch((err) => {
-                    // error while loading font list
-                    this.setState({
-                        errorText: 'Error trying to fetch the list of available fonts',
-                        loadingStatus: 'error'
-                    });
+                    this.fontManager = new FallbackFontManager();
+                    // select first fallback font as default one
+                    this.$emit('change', this.fontManager.fonts[0]);
                     console.error(this.state.errorText);
                     console.error(err);
                 });
