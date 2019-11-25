@@ -1,6 +1,6 @@
 {
 	"name": "font-picker-vue2",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"description": "Font selector component for Google Fonts",
 	"keywords": [
 		"fonts",
