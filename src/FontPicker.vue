@@ -3,18 +3,19 @@
 		<button class="dropdown-button" type="button"
 				:class="{expanded: state.expanded}"
 				@click="toggleExpanded"
-				@keypress="toggleExpanded">
-			<p class="dropdown-font-name">{{state.activeFont}}</p>
+				@keyup="updateFilter">
+			<p class="dropdown-font-name" :style="{'font-family' : state.activeFont}">{{state.activeFont}}</p>
 			<p class="dropdown-icon" :class="state.loadingStatus"></p>
 		</button>
 		<ul v-if="state.loadingStatus === 'finished' && fontManager.fonts"
 			:class="{expanded: state.expanded}"
 			@scroll="onScroll">
-			<li v-for="font in fontManager.fonts" :key="font.family">
-				<button type="button" class="font-abeezee"
+			<li v-for="font in fonts" :key="font.family">
+				<button type="button" class="font-abeezece"
 						:class="`font-${snakeCase(font.family)}${pickerSuffix} ${font.family === state.activeFont ? 'active-font' : ''}`"
-						@click="itemClick(font)"
-						@keypress="itemClick(font)">{{font.family}}</button>
+                        :style="{'font-family' : font.family}"
+						@click.prevent="itemClick(font)"
+						@keypress.prevent="itemClick(font)">{{font.family}}</button>
 			</li>
 		</ul>
 	</div>
@@ -22,6 +23,7 @@
 
 <script>
     import { FontManager } from 'font-picker';
+    import FallbackFontManager from './FallbackFontManager';
 
     /**
      * Vue interface for the font picker
@@ -59,11 +61,18 @@
                     activeFont: this.activeFont,
                     errorText: '',
                     expanded: false,
+                    filter: '',
                     loadingStatus: 'loading' // possible values: 'loading', 'finished', 'error'
                 },
                 pickerSuffix: '',
                 fontManager: null,
             };
+        },
+
+        computed: {
+            fonts: function fontFiltered() {
+                return this.fontManager.fonts.filter(font => font.family.toLowerCase().startsWith(this.state.filter));
+            }
         },
 
         mounted() {
@@ -82,7 +91,7 @@
             );
 
             this.fontManager.init()
-                .then(() => {
+                .finally(() => {
                     // font list has finished loading
                     this.setState({
                         errorText: '',
@@ -90,11 +99,9 @@
                     });
                 })
                 .catch((err) => {
-                    // error while loading font list
-                    this.setState({
-                        errorText: 'Error trying to fetch the list of available fonts',
-                        loadingStatus: 'error'
-                    });
+                    this.fontManager = new FallbackFontManager();
+                    // select first fallback font as default one
+                    this.$emit('change', this.fontManager.fonts[0]);
                     console.error(this.state.errorText);
                     console.error(err);
                 });
@@ -171,8 +178,52 @@
              * Expand/collapse the picker's font list
              */
             toggleExpanded() {
+                const updateState = {
+                    expanded: !this.state.expanded,
+                };
+
+                if (!this.state.expanded) {
+                    updateState.filter = '';
+                }
+
+                this.setState(updateState);
+            },
+
+            /**
+             * set search string
+             */
+            updateFilter($event) {
+                if ($event.key === 'Escape') {
+                    this.toggleExpanded();
+                    return;
+                }
+
+                if ($event.key === 'Backspace') {
+                    this.setState({
+                        // remove the last char from filter
+                        filter: this.state.filter.substr(0, this.state.filter.length - 1)
+                    });
+                    return;
+                }
+
+                // select the first font
+                if ($event.key === 'Enter') {
+                    const font = this.fonts[0];
+                    if (font) {
+                        this.itemClick(font);
+                    }
+                    return;
+                }
+
+                const pressedChar = String.fromCharCode($event.keyCode);
+                // is valid char
+                if (!pressedChar || /[^a-zA-Z]/.test(pressedChar)) {
+                    return;
+                }
+
+                // add pressed key to filteer
                 this.setState({
-                    expanded: !this.state.expanded
+                    filter: this.state.filter + pressedChar.toLowerCase()
                 });
             },
 
@@ -183,6 +234,7 @@
             itemClick(font) {
                 this.toggleExpanded();
                 this.$emit('change', font);
+
             }
         },
     }
