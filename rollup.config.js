@@ -8,5 +8,5 @@ export default {
 		format: 'cjs'
 	},
 	external: ['vue', 'font-picker'],
-    plugins: [VuePlugin(/* VuePluginOptions */), VueLoaderPlugin]
+	plugins: [VuePlugin(/* VuePluginOptions */), VueLoaderPlugin]
 };

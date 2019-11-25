@@ -10,18 +10,18 @@ storiesOf('FontPicker', module)
 		template: '<one-picker default-font="Open Sans"></one-picker>'
 	}))
 	.add('Local default font', () => ({
-        components: { OnePicker },
-        template: '<one-picker default-font="Arial" :options="{ name: \'2\', limit: 50 }"></one-picker>'
+		components: { OnePicker },
+		template: '<one-picker default-font="Arial" :options="{ name: \'2\', limit: 50 }"></one-picker>'
 	}))
 	.add('Non-existent default font', () => ({
-        components: { OnePicker },
-        template: '<one-picker default-font="asdf" :options="{ name: \'3\', limit: 50 }"></one-picker>'
+		components: { OnePicker },
+		template: '<one-picker default-font="asdf" :options="{ name: \'3\', limit: 50 }"></one-picker>'
 	}))
 	.add('Custom font variants', () => ({
-        components: { OnePicker },
-        template: '<one-picker default-font="Barlow" :options="{ name: \'4\', variants: [\'900italic\'] }"></one-picker>'
+		components: { OnePicker },
+		template: '<one-picker default-font="Barlow" :options="{ name: \'4\', variants: [\'900italic\'] }"></one-picker>'
 	}))
 	.add('Two font pickers', () => ({
-        components: { TwoPickers },
-        template: '<two-pickers></two-pickers>'
+		components: { TwoPickers },
+		template: '<two-pickers></two-pickers>'
 	}));
