@@ -275,6 +275,8 @@
 			justify-content: space-between;
 			background: transparent;
             line-height: 1;
+            padding: 0 0.25rem;
+            height: 20px;
 
 			&:hover, &.expanded, &:focus {
 				background: #bebebe;
