@@ -244,8 +244,11 @@
 	.font-picker {
 		position: relative;
 		display: inline-block;
-		width: 200px;
-		box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+		box-shadow: inset 0px -2px 2px rgba(0, 0, 0, 0.08);
+        border: 1px solid #BDC1CB;
+        background: #fff;
+        height: 20px;
+        border-radius: 2px;
 
 		* {
 			box-sizing: border-box;
@@ -266,13 +269,12 @@
 		}
 
 		.dropdown-button {
-			height: 35px;
 			width: 100%;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			padding: 0 10px;
-			background: #CBCBCB;
+			background: transparent;
+            line-height: 1;
 
 			&:hover, &.expanded, &:focus {
 				background: #bebebe;
@@ -290,7 +292,6 @@
 		}
 
 		.dropdown-icon {
-			margin-left: 10px;
 
 			&.loading:before {
 				content: '';
@@ -326,7 +327,7 @@
 			position: absolute;
 			z-index: 1;
 			max-height: 0;
-			width: 100%;
+			width: 210px;
 			overflow-x: hidden;
 			overflow-y: auto;
 			-webkit-overflow-scrolling: touch;
