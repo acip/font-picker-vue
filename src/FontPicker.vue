@@ -249,6 +249,7 @@
         background: #fff;
         height: 20px;
         border-radius: 2px;
+        width: 100%;
 
 		* {
 			box-sizing: border-box;
