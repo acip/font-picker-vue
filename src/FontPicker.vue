@@ -241,7 +241,7 @@
 </script>
 
 <style lang="scss">
-	.font-picker {
+	div[id^="font-picker"].font-picker {
 		position: relative;
 		display: inline-block;
 		box-shadow: inset 0px -2px 2px rgba(0, 0, 0, 0.08);
